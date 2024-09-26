@@ -8,21 +8,42 @@ const formatter = new Intl.NumberFormat("id-ID", {
   currency: "IDR",
   minimumFractionDigits: 2,
 });
+
+const timeOut = 1000;
+
 class BankingSystem extends BankAccount {
   constructor(balance) {
     super(balance);
     // this.pin = pin;
   }
 
+  // _validate(input, transactionType) {
+  //   while (isNaN(input)) {
+  //     console.log("The entered amount is not a number");
+  //     input = Number(prompt("Amount to " + transactionType + ": "));
+  //   }
+  //   return input;
+  // }
+
   deposit(amount) {
     console.log("Please wait...");
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+      // amount = this._validate(amount, "Deposit")
+      if (isNaN(amount)) {
+        setTimeout(() => {
+          reject("Not a number");
+        }, timeOut);
+        return option();
+      }
+
       setTimeout(() => {
         super.deposit(amount);
-        const message = `Successfully deposit ${formatter.format(amount)} Your Balance: ${formatter.format(this.balance)}`;
+        const message = `Successfully deposit ${formatter.format(
+          amount
+        )} Your Balance: ${formatter.format(this.balance)}`;
         resolve(message);
-      }, 1000);
+      }, timeOut);
     });
   }
 
@@ -30,11 +51,16 @@ class BankingSystem extends BankAccount {
     console.log("Please wait...");
 
     return new Promise((resolve, reject) => {
-      if (this.balance <= 0) {
+      if (isNaN(amount)) {
+        setTimeout(() => {
+          reject("Not a number");
+        }, timeOut);
+        return option();
+      } else if (this.balance <= 0) {
         // check if current balance is 0 or below
         setTimeout(() => {
           reject("You have no balance");
-        }, 1000);
+        }, timeOut);
         return option();
       }
 
@@ -44,16 +70,18 @@ class BankingSystem extends BankAccount {
         // check if balance is negative after withdraw
         setTimeout(() => {
           reject("Insufficient Balance");
-        }, 1000);
+        }, timeOut);
         return option();
       }
 
       setTimeout(() => {
         this.balance = tempBalance;
-        const message = `Successfully withdraw ${formatter.format(amount)} Your Balance: ${formatter.format(this.balance)}`;
+        const message = `Successfully withdraw ${formatter.format(
+          amount
+        )} Your Balance: ${formatter.format(this.balance)}`;
         resolve(message);
         // deposit();
-      }, 1000);
+      }, timeOut);
     });
   }
 }
@@ -62,13 +90,9 @@ let bankSystem = new BankingSystem(0);
 
 async function deposit() {
   try {
-    let amount = Number(prompt("Money to Deposit: "));
+    let amount = Number(prompt("Amount to Deposit: "));
 
-    while (isNaN(amount)) {
-      // check if entered input or amount is NaN. will be looped until the entered input is not NaN
-      console.log("The entered amount is not a number");
-      amount = Number(prompt("Money to Deposit: "));
-    }
+    // amount = bankSystem._validate(amount, "Deposit")
 
     const deposit = await bankSystem.deposit(amount);
     console.log(deposit);
@@ -76,28 +100,21 @@ async function deposit() {
     option();
   } catch (err) {
     console.log(`Error: ${err}`);
-    // deposit();
   }
 }
 
 async function withdraw() {
   try {
-    let amount = Number(prompt("Money to withdraw: "));
+    let amount = Number(prompt("Amount to withdraw: "));
 
-    while (isNaN(amount)) {
-      // check if entered input or amount is NaN. will be looped until the entered input is not NaN
-      console.log("The entered amount is not a number");
-      amount = Number(prompt("Money to withdraw: "));
-    }
+    // amount = bankSystem._validate(amount, "Withdraw");
 
     const withdraw = await bankSystem.withdraw(amount);
-
     console.log(withdraw);
 
     option();
   } catch (err) {
     console.log(`Error: ${err}`);
-    // deposit();
   }
 }
 
@@ -130,7 +147,7 @@ export function option() {
         );
         option();
     }
-  }, 1000);
+  }, timeOut);
 }
 
 option();
