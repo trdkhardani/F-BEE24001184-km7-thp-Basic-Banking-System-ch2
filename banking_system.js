@@ -17,26 +17,21 @@ class BankingSystem extends BankAccount {
     // this.pin = pin;
   }
 
-  // _validate(input, transactionType) {
-  //   while (isNaN(input)) {
-  //     console.log("The entered amount is not a number");
-  //     input = Number(prompt("Amount to " + transactionType + ": "));
-  //   }
-  //   return input;
-  // }
+  #validate(input, transactionType) {
+    while (isNaN(input)) {
+      console.log("The entered amount is not a number");
+      input = Number(prompt("Amount to " + transactionType + ": "));
+    }
+    console.clear();
+    return input;
+  }
 
   deposit(amount) {
     console.log("Please wait...");
 
-    return new Promise((resolve, reject) => {
-      // amount = this._validate(amount, "Deposit")
-      if (isNaN(amount)) {
-        setTimeout(() => {
-          reject("Not a number");
-        }, timeOut);
-        return option();
-      }
+    amount = this.#validate(amount, "Deposit");
 
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
         super.deposit(amount);
         const message = `Successfully deposit ${formatter.format(
@@ -50,13 +45,10 @@ class BankingSystem extends BankAccount {
   withdraw(amount) {
     console.log("Please wait...");
 
+    amount = this.#validate(amount, "Withdraw");
+
     return new Promise((resolve, reject) => {
-      if (isNaN(amount)) {
-        setTimeout(() => {
-          reject("Not a number");
-        }, timeOut);
-        return option();
-      } else if (this.balance <= 0) {
+      if (this.balance <= 0) {
         // check if current balance is 0 or below
         setTimeout(() => {
           reject("You have no balance");
