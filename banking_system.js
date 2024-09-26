@@ -22,8 +22,23 @@ class BankingSystem extends BankAccount {
   }
 
   withdraw(amount) {
-    amount = Number(prompt("Balance to Withdraw: "));
-    super.withdraw(amount);
+    return new Promise((resolve, reject) => {
+      console.log("Please wait...");
+
+      if (this.balance <= 0) { // operasi super.withdraw() belum dijalankan, jadinya ya selama saldonya masih ada, bisa ngabmil lebih dari saldo
+        setTimeout(() => {
+          reject("You don't have moneh");
+        }, 1000);
+        return option();
+      }
+
+      setTimeout(() => {
+        super.withdraw(amount);
+        const message = `Successfully withdraw ${amount} Your Balance: ${this.balance}`;
+        resolve(message);
+        // deposit();
+      }, 1000);
+    });
   }
 }
 
@@ -33,14 +48,34 @@ async function deposit() {
   try {
     let amount = Number(prompt("Money to Deposit: "));
 
-    while(isNaN(amount)){
-      console.log("The entered amount is not a number")
+    while (isNaN(amount)) {
+      console.log("The entered amount is not a number");
       amount = Number(prompt("Money to Deposit: "));
     }
 
     const deposit = await bankSystem.deposit(amount);
     console.log(deposit);
+
+    option();
+  } catch (err) {
+    console.log(`Error: ${err}`);
+    // deposit();
+  }
+}
+
+async function withdraw() {
+  try {
+    let amount = Number(prompt("Money to withdraw: "));
+
+    while (isNaN(amount)) {
+      console.log("The entered amount is not a number");
+      amount = Number(prompt("Money to withdraw: "));
+    }
+
+    const withdraw = await bankSystem.withdraw(amount);
     
+    console.log(withdraw);
+
     option();
   } catch (err) {
     console.log(`Error: ${err}`);
@@ -49,9 +84,9 @@ async function deposit() {
 }
 
 const exit = () => {
-    console.log("\n Bye, don't forget your card!")
-    process.exit(0);
-}
+  console.log("\n Bye, don't forget your card!");
+  process.exit(0);
+};
 
 function option() {
   setTimeout(() => {
@@ -78,4 +113,3 @@ function option() {
 }
 
 option();
-
