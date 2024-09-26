@@ -1,16 +1,15 @@
-// const prompt = require("prompt-sync")();
-
 class BankAccount {
   constructor(balance) {
     this.balance = balance;
   }
 
   deposit(amount) {
-    this.balance = this.balance + amount
+        this.balance = this.balance + amount
   }
 
   withdraw(amount) {
-    this.balance = this.balance - amount
+      let tempBalance = this.balance - amount
+      return tempBalance; // variable sementara untuk menampung saldo
   }
 }
 

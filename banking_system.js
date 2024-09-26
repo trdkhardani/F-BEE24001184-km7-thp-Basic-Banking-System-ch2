@@ -1,7 +1,13 @@
-import psp from "prompt-sync-plus";
+// import psp from "prompt-sync-plus";
+import promptSync from "prompt-sync";
 import BankAccount from "./bank_account.js";
+const prompt = promptSync();
 
-const prompt = psp();
+const formatter = new Intl.NumberFormat("id-ID", {
+  style: "currency",
+  currency: "IDR",
+  minimumFractionDigits: 2,
+});
 class BankingSystem extends BankAccount {
   constructor(balance) {
     super(balance);
@@ -9,32 +15,42 @@ class BankingSystem extends BankAccount {
   }
 
   deposit(amount) {
-    return new Promise((resolve) => {
-      console.log("Please wait...");
+    console.log("Please wait...");
 
+    return new Promise((resolve) => {
       setTimeout(() => {
         super.deposit(amount);
-        const message = `Successfully deposit ${amount} Your Balance: ${this.balance}`;
+        const message = `Successfully deposit ${formatter.format(amount)} Your Balance: ${formatter.format(this.balance)}`;
         resolve(message);
-        // deposit();
       }, 1000);
     });
   }
 
   withdraw(amount) {
-    return new Promise((resolve, reject) => {
-      console.log("Please wait...");
+    console.log("Please wait...");
 
-      if (this.balance <= 0) { // operasi super.withdraw() belum dijalankan, jadinya ya selama saldonya masih ada, bisa ngabmil lebih dari saldo
+    return new Promise((resolve, reject) => {
+      if (this.balance <= 0) {
+        // check if current balance is 0 or below
         setTimeout(() => {
-          reject("You don't have moneh");
+          reject("You have no balance");
+        }, 1000);
+        return option();
+      }
+
+      let tempBalance = super.withdraw(amount); // temporary variable to save current balance
+
+      if (tempBalance < 0) {
+        // check if balance is negative after withdraw
+        setTimeout(() => {
+          reject("Insufficient Balance");
         }, 1000);
         return option();
       }
 
       setTimeout(() => {
-        super.withdraw(amount);
-        const message = `Successfully withdraw ${amount} Your Balance: ${this.balance}`;
+        this.balance = tempBalance;
+        const message = `Successfully withdraw ${formatter.format(amount)} Your Balance: ${formatter.format(this.balance)}`;
         resolve(message);
         // deposit();
       }, 1000);
@@ -49,6 +65,7 @@ async function deposit() {
     let amount = Number(prompt("Money to Deposit: "));
 
     while (isNaN(amount)) {
+      // check if entered input or amount is NaN. will be looped until the entered input is not NaN
       console.log("The entered amount is not a number");
       amount = Number(prompt("Money to Deposit: "));
     }
@@ -68,12 +85,13 @@ async function withdraw() {
     let amount = Number(prompt("Money to withdraw: "));
 
     while (isNaN(amount)) {
+      // check if entered input or amount is NaN. will be looped until the entered input is not NaN
       console.log("The entered amount is not a number");
       amount = Number(prompt("Money to withdraw: "));
     }
 
     const withdraw = await bankSystem.withdraw(amount);
-    
+
     console.log(withdraw);
 
     option();
@@ -88,12 +106,15 @@ const exit = () => {
   process.exit(0);
 };
 
-function option() {
+export function option() {
   setTimeout(() => {
-    let choice = prompt(`\n Current Balance: Rp${bankSystem.balance},00
-            1. Deposit
-            2. Withdraw
-            3. Exit`);
+    console.log(` \n
+      1. Deposit
+      2. Withdraw
+      3. Exit
+      Current Balance: ${formatter.format(bankSystem.balance)}
+      `);
+    let choice = prompt("Choice: ");
     switch (choice) {
       case "1":
         deposit();
@@ -105,7 +126,7 @@ function option() {
         exit();
       default:
         console.log(
-          "Masukkan angka 1 (tambah saldo), 2 (kurangi saldo), atau 3 (keluar)"
+          "Please enter 1 (to deposit), 2 (to withdraw), or 3 (to exit)"
         );
         option();
     }
