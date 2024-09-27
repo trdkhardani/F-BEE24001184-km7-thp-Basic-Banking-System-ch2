@@ -17,9 +17,9 @@ class BankingSystem extends BankAccount {
     // this.pin = pin;
   }
 
-  #validate(input, transactionType) {
-    while (isNaN(input)) {
-      console.log("The entered amount is not a number");
+  #validateNaN(input, transactionType) {
+    while (isNaN(input) || input <= 0) {
+      console.log("Invalid amount. Please enter a positive number.");
       input = Number(prompt("Amount to " + transactionType + ": "));
     }
     console.clear();
@@ -29,7 +29,7 @@ class BankingSystem extends BankAccount {
   deposit(amount) {
     console.log("Please wait...");
 
-    amount = this.#validate(amount, "Deposit");
+    amount = this.#validateNaN(amount, "Deposit");
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -45,7 +45,7 @@ class BankingSystem extends BankAccount {
   withdraw(amount) {
     console.log("Please wait...");
 
-    amount = this.#validate(amount, "Withdraw");
+    amount = this.#validateNaN(amount, "Withdraw");
 
     return new Promise((resolve, reject) => {
       if (this.balance <= 0) {
