@@ -14,10 +14,3 @@ class BankAccount {
 }
 
 export default BankAccount;
-
-// let bal = new BankAccount()
-
-// let amount = Number(prompt("Enter amount: "))
-
-// bal.deposit(amount)
-// console.log(bal.balance);
