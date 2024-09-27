@@ -31,3 +31,7 @@ Once the installation is complete, you can start the application using one of th
 2. **Directly using Node.js**
    
    ```node app.js``` 
+
+3. **Using Live Server**
+   
+   Pick the `index.html` file in the `F-BEE24001184-km7-thp-Basic-Banking-System-ch2/browser_ver` in your VSCode. Then, Run Live Server. It will supposed to run on `127.0.0.1:<<PORT>>/browser_ver`. Usually, the port is 5500, but may differ for each machine.
