@@ -9,7 +9,7 @@ class BankAccount {
 
   withdraw(amount) {
       let tempBalance = this.balance - amount
-      return tempBalance; // variable sementara untuk menampung saldo
+      return tempBalance; // temporary variable to save current balance
   }
 }
 

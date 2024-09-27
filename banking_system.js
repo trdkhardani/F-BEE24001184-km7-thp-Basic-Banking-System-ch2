@@ -53,7 +53,7 @@ class BankingSystem extends BankAccount {
         setTimeout(() => {
           reject("You have no balance");
         }, timeOut);
-        return option();
+        return; // continue program after Promise reject
       }
 
       let tempBalance = super.withdraw(amount); // temporary variable to save current balance
@@ -63,7 +63,7 @@ class BankingSystem extends BankAccount {
         setTimeout(() => {
           reject("Insufficient Balance");
         }, timeOut);
-        return option();
+        return; // continue program after Promise reject
       }
 
       setTimeout(() => {
@@ -107,6 +107,7 @@ async function withdraw() {
     option();
   } catch (err) {
     console.log(`Error: ${err}`);
+    option(); // proceed to option() when error
   }
 }
 
